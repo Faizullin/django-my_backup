@@ -4,8 +4,10 @@ from django.http import HttpResponseRedirect, FileResponse
 from django.urls import path
 from django.contrib import messages
 from .models import BackupLog
-import subprocess, os
+import os
 from django.conf import settings
+
+from my_backup.utils import generate_backup
 
 
 class PermissionHandler:
@@ -46,7 +48,7 @@ class BackupLogAdmin(admin.ModelAdmin):
             return HttpResponseRedirect("../")
 
         try:
-            subprocess.call(["python", "manage.py", "export_backup"])
+            generate_backup()
             messages.success(request, "Backup created successfully.")
         except Exception as e:
             messages.error(request, f"Backup failed: {e}")
